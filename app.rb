@@ -2,8 +2,6 @@ require 'json'
 require 'sinatra'
 require 'simple_oauth'
 require 'excon'
-require 'open-uri'
-require 'nokogiri'
 
 if ENV['RACK_ENV'] != "production"
   require 'dotenv'
@@ -49,6 +47,9 @@ get('/tweets_hashtag') do
     hash_tag = params[:q].prepend("%23")
     response = tweets_hashtag(hash_tag)
     @tweets = response["statuses"]
+    puts @tweets.class
+    puts @tweets.count
+    puts @tweets
     erb(:home)
   else
     @tweets = []
