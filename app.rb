@@ -12,6 +12,18 @@ def show_params
   p "params are #{params}"
 end
 
+def words_count(string)
+  string.split(" ").count
+end
+
+def average_word_count(array)
+  total_words = 0
+  array.each do |string|
+    total_words += words_count(string)
+  end
+  total_words / array.count
+end
+
 def tweets_hashtag(hash_tag)
   authorization_header = SimpleOAuth::Header.new("get",
                                                  "https://api.twitter.com/1.1/search/tweets.json",
@@ -38,6 +50,9 @@ end
 
 get('/') do
   @tweets = []
+  @min_count = 0
+  @max_count = 0
+  @average_word_count = 0
   erb :home
 end
 
@@ -47,9 +62,14 @@ get('/tweets_hashtag') do
     hash_tag = params[:q].prepend("%23")
     response = tweets_hashtag(hash_tag)
     @tweets = response["statuses"]
-    puts @tweets.class
-    puts @tweets.count
-    puts @tweets
+    tweets_array = []
+    @tweets.each { |tweet| tweets_array << tweet["text"] }
+    @average_word_count = average_word_count(tweets_array)
+    words_count = tweets_array.map { |string| words_count(string) }
+    @min_count = words_count.min
+    @max_count = words_count.max
+    puts @average_word_count
+    print @tweets_array
     erb(:home)
   else
     @tweets = []

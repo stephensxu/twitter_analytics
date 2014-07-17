@@ -6,6 +6,10 @@
   <button style="width:200px">See Tweets with your tag!</button>
 </form>
 
+<h2>Shortest tweet word count is <%= @min_count %></h2>
+<h2>Longest tweet word count is <%= @max_count %></h2>
+<h2>Average words <%= @average_word_count %></h2>
+
 <% @tweets.each do |tweet| %>
   <p><%= tweet["text"] %></p>
 <% end %>
