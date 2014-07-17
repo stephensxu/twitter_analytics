@@ -8,6 +8,8 @@ GEM
     dotenv-deployment (0.0.2)
     excon (0.38.0)
     ffi (1.9.3)
+    gon-sinatra (0.1.0)
+      sinatra
     listen (2.7.9)
       celluloid (>= 0.15.2)
       rb-fsevent (>= 0.9.3)
@@ -34,6 +36,7 @@ PLATFORMS
 DEPENDENCIES
   dotenv
   excon
+  gon-sinatra
   rerun
   simple_oauth
   sinatra

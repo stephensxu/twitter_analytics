@@ -2,6 +2,9 @@ require 'json'
 require 'sinatra'
 require 'simple_oauth'
 require 'excon'
+require 'gon-sinatra'
+
+Sinatra::register Gon::Sinatra
 
 if ENV['RACK_ENV'] != "production"
   require 'dotenv'
@@ -68,8 +71,9 @@ get('/tweets_hashtag') do
     words_count = tweets_array.map { |string| words_count(string) }
     @min_count = words_count.min
     @max_count = words_count.max
-    puts @average_word_count
-    print @tweets_array
+    @report = [@min_count, @max_count, @average_word_count]
+    gon.report = @report
+    p @report
     erb(:home)
   else
     @tweets = []

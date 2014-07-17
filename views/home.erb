@@ -1,3 +1,17 @@
+<!DOCTYPE html>
+<html>
+
+<style>
+.chart div {
+  font: 20px sans-serif;
+  background-color: blue;
+  text-align: right;
+  padding: 3px;
+  margin: 1px;
+  color: white;
+}
+</style>
+
 <h1><a href="home.erb">Back Home</a></h1>
 <h2>Twitter play ground!</h2>
 <form method="GET" action="/tweets_hashtag">
@@ -9,8 +23,17 @@
 <h2>Shortest tweet word count is <%= @min_count %></h2>
 <h2>Longest tweet word count is <%= @max_count %></h2>
 <h2>Average words <%= @average_word_count %></h2>
+<h2 id="report">Report: <%= @report %></h2>
+
+<div class="chart">
+</div>
 
 <% @tweets.each do |tweet| %>
   <p><%= tweet["text"] %></p>
 <% end %>
 
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<%= include_gon %>
+<script src="/js/d3.js"></script>
+
+</html>
