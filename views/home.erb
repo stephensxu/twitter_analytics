@@ -20,11 +20,10 @@
   <button style="width:200px">See Tweets with your tag!</button>
 </form>
 
-<h2>Total tweets received: <%= @tweet_count %></h2>
-<h2>Shortest tweet word count is <%= @min_count %></h2>
-<h2>Longest tweet word count is <%= @max_count %></h2>
-<h2>Average words <%= @average_word_count %></h2>
-<h2 id="report">Report: <%= @report %></h2>
+<h2>Total tweets received: <%= @tweets.count %></h2>
+<h2>Shortest tweet word count is <%= @report.min_count %></h2>
+<h2>Longest tweet word count is <%= @report.max_count %></h2>
+<h2>Average words <%= @report.average_word_count %></h2>
 
 <div class="chart">
 </div>

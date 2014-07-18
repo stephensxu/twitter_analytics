@@ -15,18 +15,6 @@ def show_params
   p "params are #{params}"
 end
 
-def words_count(string)
-  string.split(" ").count
-end
-
-def average_word_count(array)
-  total_words = 0
-  array.each do |string|
-    total_words += words_count(string)
-  end
-  total_words / array.count
-end
-
 def tweets_hashtag(hash_tag)
   authorization_header = SimpleOAuth::Header.new("get",
                                                  "https://api.twitter.com/1.1/search/tweets.json",
@@ -51,12 +39,45 @@ def tweets_hashtag(hash_tag)
   end
 end
 
+class Report
+  attr_accessor :tweets_hash, :tweets_text_array, :words_count
+  def initialize(tweets)
+    @tweets_hash = tweets
+    @tweets_text_array = []
+    @tweets_hash.each { |tweet| @tweets_text_array << tweet["text"] }
+    @words_count = @tweets_text_array.map { |string| string.split(" ").count }
+  end
+
+  def average_word_count
+    total_words = 0
+    @tweets_text_array.each do |string|
+      total_words += string.split(" ").count
+    end
+    
+    if @tweets_text_array.count == 0
+      "0"
+    else
+      total_words / @tweets_text_array.count
+    end
+  end
+
+  def min_count
+    @words_count.min
+  end
+
+  def max_count
+    @words_count.max
+  end
+
+  def total_tweets
+    @tweets_text_array.count
+  end
+end
+
 get('/') do
   @tweets = []
-  @min_count = 0
-  @max_count = 0
-  @average_word_count = 0
-  @tweet_count = 0
+  @report = Report.new({})
+  @report.words_count = [0]
   erb :home
 end
 
@@ -66,15 +87,8 @@ get('/tweets_hashtag') do
     hash_tag = params[:q].prepend("%23")
     response = tweets_hashtag(hash_tag)
     @tweets = response["statuses"]
-    tweets_array = []
-    @tweets.each { |tweet| tweets_array << tweet["text"] }
-    @average_word_count = average_word_count(tweets_array)
-    words_count = tweets_array.map { |string| words_count(string) }
-    @min_count = words_count.min
-    @max_count = words_count.max
-    @report = [@min_count, @max_count, @average_word_count]
-    gon.report = @report
-    @tweet_count = @tweets.count
+    @report = Report.new(@tweets)
+    gon.report = [@report.min_count, @report.max_count, @report.average_word_count]
     erb(:home)
   else
     @tweets = []
