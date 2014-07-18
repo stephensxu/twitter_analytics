@@ -30,12 +30,12 @@ end
 def tweets_hashtag(hash_tag)
   authorization_header = SimpleOAuth::Header.new("get",
                                                  "https://api.twitter.com/1.1/search/tweets.json",
-                                                 { :q => hash_tag },
+                                                 { :q => hash_tag, :count => 100 },
                                                  { :consumer_key => ENV['TWITTER_API_KEY'],
                                                    :consumer_secret => ENV['TWITTER_API_SECRET'] })
 
   response = Excon.send("get", "https://api.twitter.com/1.1/search/tweets.json", {
-    :query => { :q => hash_tag },
+    :query => { :q => hash_tag, :count => 100 },
     :headers => { "Authorization" => authorization_header.to_s }
   })
 
@@ -74,6 +74,7 @@ get('/tweets_hashtag') do
     @report = [@min_count, @max_count, @average_word_count]
     gon.report = @report
     p @report
+    p @tweets.count
     erb(:home)
   else
     @tweets = []
