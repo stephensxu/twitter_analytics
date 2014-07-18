@@ -20,6 +20,7 @@
   <button style="width:200px">See Tweets with your tag!</button>
 </form>
 
+<h2>Total tweets received: <%= @tweet_count %></h2>
 <h2>Shortest tweet word count is <%= @min_count %></h2>
 <h2>Longest tweet word count is <%= @max_count %></h2>
 <h2>Average words <%= @average_word_count %></h2>
@@ -29,7 +30,7 @@
 </div>
 
 <% @tweets.each do |tweet| %>
-  <p><%= tweet["text"] %></p>
+  <p><%= tweet["text"] %> - <%= tweet["user"]["screen_name"] %></p>
 <% end %>
 
 <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>

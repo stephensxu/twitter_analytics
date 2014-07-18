@@ -56,6 +56,7 @@ get('/') do
   @min_count = 0
   @max_count = 0
   @average_word_count = 0
+  @tweet_count = 0
   erb :home
 end
 
@@ -73,8 +74,7 @@ get('/tweets_hashtag') do
     @max_count = words_count.max
     @report = [@min_count, @max_count, @average_word_count]
     gon.report = @report
-    p @report
-    p @tweets.count
+    @tweet_count = @tweets.count
     erb(:home)
   else
     @tweets = []
