@@ -53,12 +53,16 @@ class Report
     @tweets_text_array.each do |string|
       total_words += string.split(" ").count
     end
-    
+
     if @tweets_text_array.count == 0
       "0"
     else
       total_words / @tweets_text_array.count
     end
+  end
+
+  def date
+    Time.now
   end
 
   def min_count
