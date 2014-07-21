@@ -40,7 +40,8 @@ def tweets_hashtag(hash_tag)
 end
 
 class Report
-  attr_accessor :tweets_hash, :tweets_text_array, :words_count, :run_at
+  attr_reader :tweets_hash, :tweets_text_array, :run_at
+  attr_accessor :words_count
   def initialize(tweets)
     @run_at = Time.now
     @tweets_hash = tweets
