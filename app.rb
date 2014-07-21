@@ -55,7 +55,7 @@ class Report
     end
 
     if @tweets_text_array.count == 0
-      "0"
+      0
     else
       total_words / @tweets_text_array.count
     end
