@@ -40,8 +40,9 @@ def tweets_hashtag(hash_tag)
 end
 
 class Report
-  attr_accessor :tweets_hash, :tweets_text_array, :words_count
+  attr_accessor :tweets_hash, :tweets_text_array, :words_count, :run_at
   def initialize(tweets)
+    @run_at = Time.now
     @tweets_hash = tweets
     @tweets_text_array = []
     @tweets_hash.each { |tweet| @tweets_text_array << tweet["text"] }
@@ -59,10 +60,6 @@ class Report
     else
       total_words / @tweets_text_array.count
     end
-  end
-
-  def date
-    Time.now
   end
 
   def min_count
