@@ -58,15 +58,15 @@ class Report
     if @tweets_text_array.count == 0
       0
     else
-      total_words / @tweets_text_array.count
+      total_words.to_f / @tweets_text_array.count.to_f
     end
   end
 
-  def min_count
+  def min_word_count
     @words_count.min
   end
 
-  def max_count
+  def max_word_count
     @words_count.max
   end
 
@@ -89,7 +89,7 @@ get('/tweets_hashtag') do
     response = tweets_hashtag(hash_tag)
     @tweets = response["statuses"]
     @report = Report.new(@tweets)
-    gon.report = [@report.min_count, @report.max_count, @report.average_word_count]
+    gon.report = [@report.min_word_count, @report.max_word_count, @report.average_word_count]
     erb(:home)
   else
     @tweets = []
