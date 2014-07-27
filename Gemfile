@@ -6,6 +6,18 @@ gem "excon"
 gem "dotenv"
 gem "rerun"
 gem "gon-sinatra"
+gem 'data_mapper'
+gem 'bcrypt'
+
+group :development do
+  gem 'sqlite3'
+  gem 'dm-sqlite-adapter'
+end
+
+group :production do
+  gem 'dm-postgres-adapter'
+  gem 'pg'
+end
 
 
 
