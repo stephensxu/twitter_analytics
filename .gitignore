@@ -1,6 +1,9 @@
 # Ignore this Mac-specific file
 .DS_Store
 
+# Ignore database
+.db
+
 # Ignore dotenv files
 .env
 

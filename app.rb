@@ -3,6 +3,7 @@ require 'sinatra'
 require 'simple_oauth'
 require 'excon'
 require 'gon-sinatra'
+require 'uri'
 require_relative 'models'
 
 Sinatra::register Gon::Sinatra
@@ -16,15 +17,38 @@ def show_params
   p "params are #{params}"
 end
 
-def tweets_hashtag(hash_tag)
-  authorization_header = SimpleOAuth::Header.new("get",
-                                                 "https://api.twitter.com/1.1/search/tweets.json",
-                                                 { :q => hash_tag, :count => 100 },
-                                                 { :consumer_key => ENV['TWITTER_API_KEY'],
-                                                   :consumer_secret => ENV['TWITTER_API_SECRET'] })
+##### twitter api 
 
-  response = Excon.send("get", "https://api.twitter.com/1.1/search/tweets.json", {
-    :query => { :q => hash_tag, :count => 100 },
+def tweets_hashtag(hashtag)
+  hashtag[0] == "#" ? search_term = hashtag : search_term = ("#" + "#{hashtag}")
+  p "search term is #{search_term}"
+  twitter_api_search(search_term, :count => 100)
+end
+
+def twitter_api_url(endpoint, version = '1.1')
+  "https://api.twitter.com/#{version}#{endpoint}"
+end
+
+def twitter_api_search(search_term, params = {})
+  twitter_api_get_request("/search/tweets.json", params.merge(:q => URI.encode("#{search_term}")))
+end
+
+def twitter_api_get_request(endpoint, params, consumer_key = ENV['TWITTER_API_KEY'], consumer_secret = ENV['TWITTER_API_SECRET'])
+  twitter_api_request("get", endpoint, params, consumer_key, consumer_secret)
+end
+
+def twitter_api_request(method, endpoint, params, consumer_key = ENV['TWITTER_API_KEY'], consumer_secret = ENV['TWITTER_API_SECRET'])
+  api_url = twitter_api_url(endpoint)
+
+  authorization_header = SimpleOAuth::Header.new(method,
+                                                 api_url,
+                                                 params,
+                                                 { :consumer_key => consumer_key,
+                                                   :consumer_secret => consumer_secret})
+
+
+  response = Excon.send(method, api_url, {
+    :query => params,
     :headers => { "Authorization" => authorization_header.to_s }
   })
 
@@ -39,6 +63,8 @@ def tweets_hashtag(hash_tag)
     return response
   end
 end
+
+##### Report class
 
 class Report
   attr_reader :tweets_hash, :tweets_text_array, :run_at, :average_word_count
@@ -78,7 +104,7 @@ class Report
     @tweets_text_array.count
   end
 
-  def create_report_data
+  def save_report_data
     report_data_attributes = {
       "tag_name" => @tag,
       "created_at" => @run_at,
@@ -91,6 +117,8 @@ class Report
   end
 end
 
+##### routes
+
 get('/') do
   @tweets = []
   @report = Report.new({}, "")
@@ -101,16 +129,12 @@ end
 get('/tweets_hashtag') do
   show_params
   if params[:q]
-    search_word = params[:q]
-    p "params[:q] is #{params[:q]} before calling prepend on search_word"
-    hash_tag_encoded = search_word.prepend("%23")
-    p "params[:q] is #{params[:q]} after calling prepend on search_word, but I didn't do anything with params[:q], oops?"
-    p "search_word is #{search_word} after calling prepend"
-    response = tweets_hashtag(hash_tag_encoded)
+    @search_word = params[:q]
+    response = tweets_hashtag(@search_word)
     @tweets = response["statuses"]
-    @report = Report.new(@tweets, search_word)
+    @report = Report.new(@tweets, @search_word)
     @report.calc_average_word_count
-    @report.create_report_data
+    @report.save_report_data
     gon.report = [@report.min_word_count, @report.max_word_count, @report.average_word_count]
     erb(:home)
   else
