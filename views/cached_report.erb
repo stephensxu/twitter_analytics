@@ -20,7 +20,9 @@
   <button style="width:200px">See Tweets with your tag!</button>
 </form>
 
-<h2>Keword: <%= @search_word %></h2>
+<h1>Someone has already searched for this keyword less than an hour ago, so I'm showing you our existing report instead of making a new search!</h2>
+
+<h2>Key word: <%= @search_word %></h2>
 <h2>Total tweets received: <%= @saved_report.total_tweets %></h2>
 <h2>Shortest tweet word count is <%= @saved_report.min_word_count %></h2>
 <h2>Longest tweet word count is <%= @saved_report.max_word_count %></h2>
