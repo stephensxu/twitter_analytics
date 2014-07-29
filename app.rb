@@ -128,8 +128,14 @@ end
 
 get('/tweets_hashtag') do
   show_params
-  if params[:q]
-    @search_word = params[:q]
+  @search_word = params[:q]
+  @saved_report = Report_data.first(:tag_name => @search_word)
+  if @search_word == ""
+    redirect("/")
+  elsif @saved_report
+    gon.report = [@saved_report.min_word_count, @saved_report.max_word_count, @saved_report.average_word_count]
+    erb(:cached_report)
+  elsif @search_word != ""
     response = tweets_hashtag(@search_word)
     @tweets = response["statuses"]
     @report = Report.new(@tweets, @search_word)
@@ -137,9 +143,6 @@ get('/tweets_hashtag') do
     @report.save_report_data
     gon.report = [@report.min_word_count, @report.max_word_count, @report.average_word_count]
     erb(:home)
-  else
-    @tweets = []
-    redirect("/")
   end
 end
 
