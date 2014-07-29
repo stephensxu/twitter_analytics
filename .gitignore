@@ -2,7 +2,7 @@
 .DS_Store
 
 # Ignore database
-.db
+reports.db
 
 # Ignore dotenv files
 .env
