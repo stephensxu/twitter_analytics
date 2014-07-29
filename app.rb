@@ -155,7 +155,6 @@ get('/tweets_hashtag') do
   end
 end
 
-
-get('/home.erb') do
+get('/home') do
   redirect("/")
 end
