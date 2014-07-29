@@ -7,7 +7,6 @@ gem "dotenv"
 gem "rerun"
 gem "gon-sinatra"
 gem 'data_mapper'
-gem 'uri'
 
 group :development do
   gem 'sqlite3'
