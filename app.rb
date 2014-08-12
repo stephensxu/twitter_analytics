@@ -4,6 +4,7 @@ require 'simple_oauth'
 require 'excon'
 require 'gon-sinatra'
 require 'uri'
+require 'date'
 require_relative 'models'
 
 Sinatra::register Gon::Sinatra
@@ -116,7 +117,6 @@ class Report
     report_data_attributes = {
       "tag_name" => @tag,
       "created_at" => @run_at,
-      "epoch_time" => @run_at,
       "average_word_count" => @average_word_count,
       "min_word_count" => @words_count.min,
       "max_word_count" => @words_count.max,
@@ -145,10 +145,10 @@ get('/tweets_hashtag') do
     query_twitter_api(@search_word)
     gon.report = [@report.min_word_count, @report.max_word_count, @report.average_word_count]
     erb(:home)
-  elsif @saved_report && Time.now - @saved_report.epoch_time < 3600
+  elsif @saved_report && (DateTime.now - @saved_report.created_at) * 24.0 <= 1.0
     gon.report = [@saved_report.min_word_count, @saved_report.max_word_count, @saved_report.average_word_count]
     erb(:cached_report)
-  elsif @saved_report && Time.now - @saved_report.epoch_time > 3600
+  elsif @saved_report && (DateTime.now - @saved_report.created_at) * 24.0 > 1.0
     query_twitter_api(@search_word)
     gon.report = [@report.min_word_count, @report.max_word_count, @report.average_word_count]
     erb(:home)
