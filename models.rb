@@ -14,7 +14,6 @@ class Report_data
   property :id, Serial
   property :tag_name, String
   property :created_at, DateTime
-  property :epoch_time, EpochTime
   property :average_word_count, Float
   property :min_word_count, Integer
   property :max_word_count, Integer
