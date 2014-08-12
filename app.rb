@@ -64,10 +64,10 @@ def twitter_api_request(method, endpoint, params, consumer_key = ENV['TWITTER_AP
   end
 end
 
-def query_twitter_api
-  response = tweets_hashtag(@search_word)
+def query_twitter_api(search_word)
+  response = tweets_hashtag(search_word)
   @tweets = response["statuses"]
-  @report = Report.new(@tweets, @search_word)
+  @report = Report.new(@tweets, search_word)
   @report.calc_average_word_count
   @report.save_report_data
 end
@@ -142,14 +142,14 @@ get('/tweets_hashtag') do
   if @search_word == ""
     redirect("/")
   elsif !@saved_report
-    query_twitter_api
+    query_twitter_api(@search_word)
     gon.report = [@report.min_word_count, @report.max_word_count, @report.average_word_count]
     erb(:home)
   elsif @saved_report && Time.now - @saved_report.epoch_time < 3600
     gon.report = [@saved_report.min_word_count, @saved_report.max_word_count, @saved_report.average_word_count]
     erb(:cached_report)
   elsif @saved_report && Time.now - @saved_report.epoch_time > 3600
-    query_twitter_api
+    query_twitter_api(@search_word)
     gon.report = [@report.min_word_count, @report.max_word_count, @report.average_word_count]
     erb(:home)
   end
