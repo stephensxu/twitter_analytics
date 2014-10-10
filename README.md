@@ -2,8 +2,10 @@
 
 ## Running The Software
 
-1. Download the repo in your local computer.
-2. In terminal/command line, cd to the root directory of this project
-3. bundle install --without production
-4. rerun -x rackup
-5. In browser, visit "localhost:9292"
+* Download the repo in your local computer.
+* In terminal/command line, cd to the root directory of this project
+* Run `cp .env.example .env`
+* Enter your own TWITTER_API_KEY and TWITTER_API_SECRET to the matching line in `.env` file
+* bundle install --without production
+* rerun -x rackup
+* In browser, visit "localhost:9292"
