@@ -1,4 +1,4 @@
-<a href="http://http://tweetcounts.herokuapp.com/" target="_blank">Tweetcounts</a>
+<a href="http://tweetcounts.herokuapp.com/" target="_blank">Tweetcounts</a>
 
 ## Running The Software
 
